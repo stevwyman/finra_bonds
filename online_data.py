@@ -7,8 +7,7 @@ class PolygonIO():
     def __init__(self):
         # open a connection to a URL using urllib3
         self._http = urllib3.PoolManager()
-        self.__api_key__ = "3uaXOA4DfYU1u0JaftN1HEYV97WAQ08u"
-        #self.__api_key__ = os.environ.get("POLYGON_API_KEY")
+        self.__api_key__ = os.environ.get("POLYGON_API_KEY")
 
     def lookupSymbol(self, symbol):
         """Look up ticker data from online API."""
