@@ -13,7 +13,7 @@ from technical_analysis import EMA
 FINRA_DATE_FORMAT = "%m/%d/%Y"
 LOCAL_DATE_FORMAT = "%Y%m%d"
 
-cookie = 'enter here your cookie'
+cookie = 'enter cookie here'
 
 class OnlineReader:
     def __init__(self):
