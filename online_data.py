@@ -1,13 +1,16 @@
 import urllib3
 import os
 import json
+import configparser
 
 class PolygonIO():
 
     def __init__(self):
         # open a connection to a URL using urllib3
         self._http = urllib3.PoolManager()
-        self.__api_key__ = os.environ.get("POLYGON_API_KEY")
+        config = configparser.ConfigParser()
+        config.read("config.ini")
+        self.__api_key__ = config.get("API-KEY","polygon")
 
     def lookupSymbol(self, symbol):
         """Look up ticker data from online API."""

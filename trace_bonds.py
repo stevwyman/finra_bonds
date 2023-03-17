@@ -1,6 +1,8 @@
 import urllib3
 import pymongo
 import time
+import configparser
+import os
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from datetime import datetime, timedelta
@@ -19,6 +21,10 @@ class OnlineReader:
     def __init__(self):
         # open a connection to a URL using urllib3
         self._http = urllib3.PoolManager()
+        config = configparser.ConfigParser()
+        config.read("config.ini")
+        self.__cookie__ = config.get("cookie","morningstar")
+
 
     def return_data(self, data: str) -> dict:
         """
@@ -101,7 +107,7 @@ class OnlineReader:
 
         url += "&_=" + str(milliseconds)
 
-        response = self._http.request("GET", url, headers={"Cookie": cookie})
+        response = self._http.request("GET", url, headers={"Cookie": self.__cookie__})
         print(f"Response for {response.geturl()}: {response.status} ... ")
         # print(response.data)
 
@@ -163,6 +169,7 @@ class LocaleDAO:
             return {}
         except KeyError as ke:
             return {}
+    
     def read_by_dates(self, start_date: int, end_date: int) -> list[dict]:
         """
         returns a list of all entries in the database sorted by date

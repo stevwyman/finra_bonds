@@ -1,4 +1,6 @@
-# finra_bonds
+# Corporate High Yield Bonds
+
+<img src="img/corp_highyield_vs_spy.png" />
 
 a tool to read market aggregate information for bonds from morningstar.com
 
@@ -8,9 +10,19 @@ Also, the current implementation uses a mongodb for persistence of data
 
 <img src="img/corp_high_yield.png" />
 
+## preparation
+
+recommend a mongodb instance to store the data
+
 ## usage
 
-in the current form, we use simple scripts to run the different tasks, in a further update the commands will be combined to a command-line tool
+````
+usage: fb.py [-h] [-t T]
 
-* fb_chart.py reads data from the database and displays them
-* fb_update.py reads the data from the web and stores them in the database
+read and display corporate high yield bonds
+
+optional arguments:
+  -h, --help  show this help message and exit
+  -t T        the task to perform, default update, others: chart
+```
+
