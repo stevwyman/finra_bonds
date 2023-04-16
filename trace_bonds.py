@@ -9,22 +9,37 @@ from datetime import datetime, timedelta
 from tabulate import tabulate
 from bs4 import BeautifulSoup
 from lxml import etree
+from selenium import webdriver
+from selenium.webdriver.firefox.options import Options
 from technical_analysis import EMA
 
 
 FINRA_DATE_FORMAT = "%m/%d/%Y"
 LOCAL_DATE_FORMAT = "%Y%m%d"
 
-cookie = 'enter cookie here'
-
 class OnlineReader:
+
     def __init__(self):
         # open a connection to a URL using urllib3
         self._http = urllib3.PoolManager()
         config = configparser.ConfigParser()
         config.read("config.ini")
-        self.__cookie__ = config.get("cookie","morningstar")
 
+        options = Options()
+        options.add_argument("--headless")
+        browser = webdriver.Firefox(options=options)
+        browser.get("https://finra-markets.morningstar.com/BondCenter/TRACEMarketAggregateStats.jsp")
+
+        all_cookies=browser.get_cookies();
+        if len(all_cookies) < 1:
+            raise ValueError("Could not get cookie")
+
+        self.__cookie__ = ''
+        for cookie in all_cookies:
+            self.__cookie__ += cookie['name'] + "=" + cookie['value'] + ";"
+
+        browser.close()
+        browser.quit()
 
     def return_data(self, data: str) -> dict:
         """
@@ -126,9 +141,17 @@ class OnlineReader:
 class LocaleDAO:
 
     def __init__(self):
-        self._myclient = pymongo.MongoClient("mongodb://localhost:27017/")
-        self._db = self._myclient.python_test
-        self._collection = self._db.finra_bonds
+
+        config = configparser.ConfigParser()
+        config.read("config.ini")
+        self._client = pymongo.MongoClient(config.get("DB","url"))
+        try:
+            self._client.server_info()
+        except pymongo.errors.ServerSelectionTimeoutError:
+            exit("Mongo instance not reachable.")
+
+        self._db = self._client[config.get("DB","db")]
+        self._collection = self._db[config.get("DB","collection")]
 
     def write(self, bond_data: dict) -> None:
         file_date = bond_data["date"]
@@ -204,9 +227,8 @@ class LocaleDAO:
         else:
             raise ValueError("Currently no entries available")
         
-        
     def close(self):
-        self._myclient.close
+        self._client.close
 
 
 def update() -> None:

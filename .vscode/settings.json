@@ -2,8 +2,12 @@
     "cSpell.words": [
         "finra",
         "lxml",
+        "matplotlib",
+        "mdates",
+        "morningstar",
         "myclient",
         "pymongo",
+        "pyplot",
         "tablefmt"
     ]
 }

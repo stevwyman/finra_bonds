@@ -133,3 +133,4 @@ dmypy.json
 
 # configuration
 config.ini
+geckodriver

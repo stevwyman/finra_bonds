@@ -63,17 +63,10 @@ def test_online():
     online_reader = OnlineReader()
     data = online_reader.request_data(request_date)
     assert data["date"] == 20230310
-    local_dao = LocaleDAO()
-    local_dao.write(data)
 
 def test_return_data():
     online_reader = OnlineReader()
     assert online_reader.return_data(test_data) == valid_result
-
-def test_request_data():
-    request_date = datetime.fromisoformat('2023-01-31')
-    data = OnlineReader().request_data(request_date)
-    assert data["date"] == 20230131
 
 def test_read_data_limit():
     local_dao = LocaleDAO()
