@@ -21,7 +21,7 @@ def main():
         all = local_dao.read(250)
         # all = local_dao.read_by_dates(20210101, 20230311)
         # all = local_dao.read_all()
-        print(f"found {all} entries")
+        # print(f"found {all} entries")
         ad_chart(all)   
 
 

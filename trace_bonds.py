@@ -27,7 +27,16 @@ class OnlineReader:
 
         options = Options()
         options.add_argument("--headless")
+        options.add_argument('--ignore-ssl-errors=yes')
+        options.add_argument('--ignore-certificate-errors')
         browser = webdriver.Firefox(options=options)
+        """
+        browser = webdriver.Remote(
+            command_executor='http://localhost:4444/wd/hub',
+            options=options
+            )
+        """
+
         browser.get("https://finra-markets.morningstar.com/BondCenter/TRACEMarketAggregateStats.jsp")
 
         all_cookies=browser.get_cookies();
@@ -38,8 +47,13 @@ class OnlineReader:
         for cookie in all_cookies:
             self.__cookie__ += cookie['name'] + "=" + cookie['value'] + ";"
 
-        browser.close()
-        browser.quit()
+        print(f"cookie: {self.__cookie__}")
+
+        try:
+            browser.close()
+            browser.quit()
+        except:
+            print("Could not close browser")
 
     def return_data(self, data: str) -> dict:
         """
@@ -288,6 +302,11 @@ def ad_chart(ad_history: list(), ad_ema=39) -> None:
         """
         adv = entry["bond_data"]["High Yield"]["Advances"]
         dec = entry["bond_data"]["High Yield"]["Declines"]
+
+        # Investment Grade
+        # adv = entry["bond_data"]["Investment Grade"]["Advances"]
+        # dec = entry["bond_data"]["Investment Grade"]["Declines"]
+
         current_ad = adv - dec + previous_ad
 
         trend_value = ad_ema.add(current_ad)
@@ -320,6 +339,11 @@ def ad_spy_chart(ad_history: list(), spy_history: list(), ad_ema=39, spy_ema=50)
         """
         adv = entry["bond_data"]["High Yield"]["Advances"]
         dec = entry["bond_data"]["High Yield"]["Declines"]
+
+        # Investment Grade
+        # adv = entry["bond_data"]["Investment Grade"]["Advances"]
+        # dec = entry["bond_data"]["Investment Grade"]["Declines"]
+
         current_ad = adv - dec + previous_ad
 
         trend_value = ad_ema.add(current_ad)

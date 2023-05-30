@@ -1,0 +1,7 @@
+matplotlib
+selenium
+lxml
+bs4
+tabulate
+pymongo
+urllib3
